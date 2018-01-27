@@ -8,6 +8,10 @@ Parameters:
         Description: An environment name that will be prefixed to resource names
         Type: String
 
+    KeyName:
+        Description: Key for ssh access
+        Type: String
+
     InstanceType:
         Description: Which instance type should we use to build the ECS cluster?
         Type: String
@@ -114,6 +118,8 @@ Resources:
         Type: AWS::AutoScaling::LaunchConfiguration
         Properties:
             ImageId:  !FindInMap [AWSRegionToAMI, !Ref "AWS::Region", AMI]
+            KeyName: !Ref KeyName
+            AssociatePublicIpAddress: true
             InstanceType: !Ref InstanceType
             SecurityGroups:
                 - !Ref SecurityGroup

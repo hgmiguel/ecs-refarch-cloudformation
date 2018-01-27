@@ -1,0 +1,36 @@
+version: '2'
+
+services:
+  wordpress:
+    image: wordpress:4.9.2-fpm
+    environment:
+      WORDPRESS_DB_HOST: dbserver
+      WORDPRESS_DB_USER: woocommerce
+      WORDPRESS_DB_PASSWORD: woocommerce
+      WORDPRESS_DB_NAME: wordpress
+    volumes:
+      - ./html:/var/www/html
+
+  nginx:
+    image: nginx
+    ports:
+      - 8080:80
+    volumes:
+      - ./site.conf:/etc/nginx/conf.d/default.conf
+      - ./html:/var/www/html
+    links: 
+      - wordpress
+
+
+
+  dbserver:
+    image: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: woocommerce
+      MYSQL_PASSWORD: woocommerce
+    volumes:
+      - mysql:/var/lib/mysql
+volumes:
+  mysql:

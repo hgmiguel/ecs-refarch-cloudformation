@@ -1,5 +1,6 @@
 Description: >
-    This is an example of a long running ECS service that serves a JSON API of products.
+    This is an example of a long running ECS service that needs to connect to another ECS service (product-service)
+    via it's load balancer. We use environment variables to pass the URL of the product-service to this one's container(s).
 
 Parameters: 
 
@@ -16,6 +17,10 @@ Parameters:
         Type: Number
         Default: 2
 
+    ProductServiceUrl:
+        Description: The URL of the Product Service (used to fetch product information)
+        Type: String
+
     Listener:
         Description: The Application Load Balancer listener to register with
         Type: String
@@ -23,7 +28,7 @@ Parameters:
     Path: 
         Description: The path to register with the Application Load Balancer
         Type: String
-        Default: /products
+        Default: /
 
 Resources:
 
@@ -36,27 +41,30 @@ Resources:
             DesiredCount: !Ref DesiredCount
             TaskDefinition: !Ref TaskDefinition
             LoadBalancers: 
-                - ContainerName: "product-service"
-                  ContainerPort: 8001
+                - ContainerName: "website-service"
+                  ContainerPort: 8000
                   TargetGroupArn: !Ref TargetGroup
 
     TaskDefinition:
         Type: AWS::ECS::TaskDefinition
         Properties:
-            Family: product-service
+            Family: website-service
             ContainerDefinitions:
-                - Name: product-service
+                - Name: website-service
                   Essential: true
-                  Image: 275396840892.dkr.ecr.us-east-1.amazonaws.com/ecs-refarch-cloudformation/product-service:1.0.0
+                  Image: nginx
                   Memory: 128
+                  Environment: 
+                    - Name: PRODUCT_SERVICE_URL
+                      Value: !Ref ProductServiceUrl
                   PortMappings:
-                    - ContainerPort: 8001
+                    - ContainerPort: 8000
                   LogConfiguration:
                     LogDriver: awslogs
                     Options:
                         awslogs-group: !Ref AWS::StackName
                         awslogs-region: !Ref AWS::Region
-    
+
     CloudWatchLogsGroup:
         Type: AWS::Logs::LogGroup
         Properties: 
@@ -72,7 +80,7 @@ Resources:
             Matcher: 
                 HttpCode: 200-299
             HealthCheckIntervalSeconds: 10
-            HealthCheckPath: /products
+            HealthCheckPath: /
             HealthCheckProtocol: HTTP
             HealthCheckTimeoutSeconds: 5
             HealthyThresholdCount: 2
@@ -81,7 +89,7 @@ Resources:
         Type: AWS::ElasticLoadBalancingV2::ListenerRule
         Properties:
             ListenerArn: !Ref Listener
-            Priority: 2
+            Priority: 1
             Conditions:
                 - Field: path-pattern
                   Values: 
@@ -127,3 +135,4 @@ Resources:
                                 "Resource": "*"
                         }]
                     }
+

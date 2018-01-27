@@ -56,30 +56,31 @@ Resources:
                 ClusterSize: 1
                 VPC: !GetAtt VPC.Outputs.VPC
                 SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSHostSecurityGroup
-                Subnets: !GetAtt VPC.Outputs.PrivateSubnets
+                Subnets: !GetAtt VPC.Outputs.PublicSubnets
+                KeyName: public-globant-hgmiguel-key 
 
-    ProductService:
-        Type: AWS::CloudFormation::Stack
-        Properties:
-            TemplateURL: ./services/product-service/service.yaml
-            Parameters:
-                VPC: !GetAtt VPC.Outputs.VPC
-                Cluster: !GetAtt ECS.Outputs.Cluster
-                DesiredCount: 1
-                Listener: !GetAtt ALB.Outputs.Listener 
-                Path: /products
-
-    WebsiteService:
-        Type: AWS::CloudFormation::Stack
-        Properties:
-            TemplateURL: ./services/website-service/service.yaml
-            Parameters:
-                VPC: !GetAtt VPC.Outputs.VPC
-                Cluster: !GetAtt ECS.Outputs.Cluster
-                DesiredCount: 1
-                ProductServiceUrl: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "products" ]]
-                Listener: !GetAtt ALB.Outputs.Listener 
-                Path: /
+#   ProductService:
+#       Type: AWS::CloudFormation::Stack
+#       Properties:
+#           TemplateURL: ./services/product-service/service.yaml
+#           Parameters:
+#               VPC: !GetAtt VPC.Outputs.VPC
+#               Cluster: !GetAtt ECS.Outputs.Cluster
+#               DesiredCount: 1
+#               Listener: !GetAtt ALB.Outputs.Listener 
+#               Path: /products
+#
+#   WebsiteService:
+#       Type: AWS::CloudFormation::Stack
+#       Properties:
+#           TemplateURL: ./services/website-service/service.yaml
+#           Parameters:
+#               VPC: !GetAtt VPC.Outputs.VPC
+#               Cluster: !GetAtt ECS.Outputs.Cluster
+#               DesiredCount: 1
+#               ProductServiceUrl: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "products" ]]
+#               Listener: !GetAtt ALB.Outputs.Listener 
+#               Path: /
 
 
 Outputs:
