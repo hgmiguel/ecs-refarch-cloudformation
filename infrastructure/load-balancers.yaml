@@ -53,6 +53,7 @@ Resources:
             VpcId: !Ref VPC
             Port: 80
             Protocol: HTTP
+            HealthCheckPath: /nginx_status
            
 Outputs:
 

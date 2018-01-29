@@ -59,16 +59,16 @@ Resources:
                 Subnets: !GetAtt VPC.Outputs.PublicSubnets
                 KeyName: public-globant-hgmiguel-key 
 
-#   ProductService:
-#       Type: AWS::CloudFormation::Stack
-#       Properties:
-#           TemplateURL: ./services/product-service/service.yaml
-#           Parameters:
-#               VPC: !GetAtt VPC.Outputs.VPC
-#               Cluster: !GetAtt ECS.Outputs.Cluster
-#               DesiredCount: 1
-#               Listener: !GetAtt ALB.Outputs.Listener 
-#               Path: /products
+#   WoocommerceService:
+#      Type: AWS::CloudFormation::Stack
+#      Properties:
+#          TemplateURL: ./services/woocommerce/service.yaml
+#          Parameters:
+#              VPC: !GetAtt VPC.Outputs.VPC
+#              Cluster: !GetAtt ECS.Outputs.Cluster
+#              DesiredCount: 1
+#              Listener: !GetAtt ALB.Outputs.Listener 
+#              Path: /products
 #
 #   WebsiteService:
 #       Type: AWS::CloudFormation::Stack
@@ -84,10 +84,6 @@ Resources:
 
 
 Outputs:
-
-    ProductServiceUrl: 
-        Description: The URL endpoint for the product service
-        Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "products" ]]
 
     WebsiteServiceUrl: 
         Description: The URL endpoint for the website service
