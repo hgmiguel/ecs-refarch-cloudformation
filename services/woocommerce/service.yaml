@@ -5,6 +5,10 @@ Description: >
 
 Parameters: 
 
+    EnvironmentName:
+        Description: An environment name that will be prefixed to resource names
+        Type: String
+
     VPC:
         Description: The VPC that the ECS cluster is deployed to
         Type: AWS::EC2::VPC::Id
@@ -127,6 +131,7 @@ Resources:
     TargetGroup:
         Type: AWS::ElasticLoadBalancingV2::TargetGroup
         Properties:
+          #Name: !Sub ${EnvironmentName}-woocommerce
             VpcId: !Ref VPC
             Port: 80
             Protocol: HTTP
@@ -144,9 +149,9 @@ Resources:
             ListenerArn: !Ref Listener
             Priority: 1
             Conditions:
-                - Field: path-pattern
+                - Field: host-header
                   Values: 
-                    - !Ref Path
+                    - "*.elb.amazonaws.com"
             Actions:
                 - TargetGroupArn: !Ref TargetGroup
                   Type: forward
