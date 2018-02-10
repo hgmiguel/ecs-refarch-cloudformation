@@ -144,9 +144,12 @@ Resources:
                             command: !Sub echo ECS_CLUSTER=${ECSCluster} >> /etc/ecs/ecs.config
                         02_create_config_dir:
                             command: mkdir /config
-                        03_get_nginx_config:
-                          command: aws s3 cp s3://hgmiguel.mx.bautizos/site.conf /config/
-                        04_mysql_data:
+                        03_get_config:
+                          command: aws s3 cp --recursive s3://hgmiguel.mx.bautizos/ /config/
+                        04_uncompress_config:
+                          cwd: /config
+                          command: tar xvzf bautizo.tar.gz 
+                        05_mysql_data:
                           command: mkdir /data
                     files:
                         "/etc/cfn/cfn-hup.conf":

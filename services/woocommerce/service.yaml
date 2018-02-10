@@ -54,6 +54,9 @@ Resources:
               - Name: site-conf
                 Host:
                   SourcePath: "/config/site.conf"
+              - Name: wp-html
+                Host:
+                  SourcePath: "/config/html"
               - Name: mysql-data
                 Host:
                   SourcePath: "/data"
@@ -73,6 +76,9 @@ Resources:
                       Value: wordpress
                   PortMappings:
                     - ContainerPort: 9000
+                  MountPoints:
+                    - ContainerPath: /var/www/html
+                      SourceVolume: wp-html
                   Links:
                     - mariadb
                   LogConfiguration:
