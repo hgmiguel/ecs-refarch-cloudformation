@@ -49,3 +49,17 @@ TODO:
 ecs cluster name bautizos-development
 keys public-globant-hgmiguel-key.pem 
 
+
+TODOS:
+automatizar el backup 
+
+
+
+
+
+docker run -it --rm --volumes-from ecs-website-service-22-wordpress-d2fbf6a5c7fbcef12600 --network container:ecs-website-service-22-wordpress-d2fbf6a5c7fbcef12600 wordpress:cli db import backup.sql
+
+
+
+
+
