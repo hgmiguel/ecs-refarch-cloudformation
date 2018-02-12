@@ -34,6 +34,10 @@ Parameters:
         Description: Select the Security Group to use for the ECS cluster hosts
         Type: AWS::EC2::SecurityGroup::Id
 
+    PageName:
+        Description: only uses with de zip
+        Type: String
+
 Mappings:
 
     # These are the latest ECS optimized AMIs as of Jan 2018:
@@ -145,10 +149,10 @@ Resources:
                         02_create_config_dir:
                             command: mkdir /config
                         03_get_config:
-                          command: aws s3 cp --recursive s3://hgmiguel.mx.bautizos/ /config/
+                          command: !Sub aws s3 cp --recursive s3://hgmiguel.mx.${PageName}/ /config/
                         04_uncompress_config:
                           cwd: /config
-                          command: tar xvzf bautizo.tar.gz 
+                          command: !Sub tar xvzf ${PageName}.tar.gz 
                         05_mysql_data:
                           command: mkdir /data
                     files:

@@ -1,0 +1,43 @@
+---
+- hosts: localhost
+  connection: local
+  vars:
+    site_name: momentosdivinos
+    site_url: www.momentosdivinos.mx
+  tasks:
+    - name: copy folder html
+      synchronize: 
+        src: /home/hgmiguel/Source/ecs-refarch-cloudformation/services/woocommerce/html/
+        dest: /home/hgmiguel/Source/ecs-refarch-cloudformation/services/woocommerce/ansible/html/
+        recursive: true
+        archive: no
+      delegate_to: localhost
+      become: true
+    - name: change wordrpes configuration
+      template:
+        src: templates/wp-config.php.j2
+        dest: html/wp-config.php
+      become: true
+    - name: change nginx configuration
+      template:
+        src: templates/site.conf.j2
+        dest: ./site.conf
+    - name: Compress html
+      archive:
+        path: html
+        dest: "{{ site_name }}.tar.gz"
+    - name: Simple PUT operation
+      aws_s3:
+        bucket: "hgmiguel.mx.{{ site_name }}"
+        object: "{{ site_name }}.tar.gz"
+        src: "{{ site_name }}.tar.gz"
+        profile: hgmiguel
+        mode: put
+    - name: Simple PUT operation
+      aws_s3:
+        bucket: "hgmiguel.mx.{{ site_name }}"
+        object: site.conf
+        src: site.conf
+        profile: hgmiguel
+        mode: put
+
