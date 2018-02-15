@@ -58,6 +58,7 @@ Resources:
                 SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSHostSecurityGroup
                 Subnets: !GetAtt VPC.Outputs.PublicSubnets
                 KeyName: public-globant-hgmiguel-key 
+                PageName: momentosdivinos
 
     WoocommerceService:
       Type: AWS::CloudFormation::Stack

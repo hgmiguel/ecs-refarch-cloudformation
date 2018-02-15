@@ -37,8 +37,10 @@ Resources:
         Type: AWS::ElasticLoadBalancingV2::Listener
         Properties:
             LoadBalancerArn: !Ref LoadBalancer
-            Port: 80
-            Protocol: HTTP 
+            Certificates: 
+              - CertificateArn: arn:aws:acm:us-east-1:408460586533:certificate/38bfb881-e38c-4122-89d1-4e9d7597e58e
+            Port: 433
+            Protocol: HTTPS
             DefaultActions: 
                 - Type: forward
                   TargetGroupArn: !Ref DefaultTargetGroup
