@@ -139,7 +139,7 @@ Resources:
         Properties:
           #Name: !Sub ${EnvironmentName}-woocommerce
             VpcId: !Ref VPC
-            Port: 80
+            Port: 80 
             Protocol: HTTP
             Matcher: 
                 HttpCode: 200-299
@@ -158,6 +158,32 @@ Resources:
                 - Field: host-header
                   Values: 
                     - "*.elb.amazonaws.com"
+            Actions:
+                - TargetGroupArn: !Ref TargetGroup
+                  Type: forward
+                  
+    ListenerRule:
+        Type: AWS::ElasticLoadBalancingV2::ListenerRule
+        Properties:
+            ListenerArn: !Ref Listener
+            Priority: 2
+            Conditions:
+                - Field: host-header
+                  Values: 
+                    - "www.momentosdivinos.mx"
+            Actions:
+                - TargetGroupArn: !Ref TargetGroup
+                  Type: forward
+
+    ListenerRule:
+        Type: AWS::ElasticLoadBalancingV2::ListenerRule
+        Properties:
+            ListenerArn: !Ref Listener
+            Priority: 3
+            Conditions:
+                - Field: host-header
+                  Values: 
+                    - "momentosdivinos.mx"
             Actions:
                 - TargetGroupArn: !Ref TargetGroup
                   Type: forward

@@ -39,7 +39,7 @@ Resources:
             LoadBalancerArn: !Ref LoadBalancer
             Certificates: 
               - CertificateArn: arn:aws:acm:us-east-1:408460586533:certificate/38bfb881-e38c-4122-89d1-4e9d7597e58e
-            Port: 433
+            Port: 443
             Protocol: HTTPS
             DefaultActions: 
                 - Type: forward

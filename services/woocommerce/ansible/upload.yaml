@@ -3,7 +3,7 @@
   connection: local
   vars:
     site_name: momentosdivinos
-    site_url: www.momentosdivinos.mx
+    site_url: momentosdivinos.mx
   tasks:
     - name: copy folder html
       synchronize: 
