@@ -1,0 +1,38 @@
+Description: >
+    This template deploys a VPC, with a pair of public and private subnets spread 
+    across two Availabilty Zones. It deploys an Internet Gateway, with a default 
+    route on the public subnets. It deploys a pair of NAT Gateways (one in each AZ), 
+    and default routes for them in the private subnets.
+
+Parameters:
+
+    EnvironmentName:
+        Description: An environment name that will be prefixed to resource names
+        Type: String
+
+    AlbUrl:
+        Description: Url for the alb.
+        Type: String
+
+    AlbHostedZoneId:
+        Description: Route53 hosted zone
+        Type: String
+
+    HostedZoneId:
+        Description: Route53 hosted zone
+        Type: String
+
+    WebUrl:
+        Description: The web url
+        Type: String
+
+Resources:
+  WebDns:
+    Type: AWS::Route53::RecordSet
+    Properties: 
+      AliasTarget: 
+        DNSName: !Ref AlbUrl
+        HostedZoneId: !Ref AlbHostedZoneId
+      HostedZoneId: !Ref HostedZoneId
+      Name: !Ref WebUrl
+      Type: A

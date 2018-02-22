@@ -72,6 +72,17 @@ Resources:
               Listener: !GetAtt ALB.Outputs.Listener 
               Path: /
 
+    WebDNS:
+      Type: AWS::CloudFormation::Stack
+      Properties:
+          TemplateURL: ./infrastructure/dns.yaml
+          Parameters:
+              EnvironmentName:    !Ref AWS::StackName
+              AlbUrl: !GetAtt ALB.Outputs.LoadBalancerUrl
+              AlbHostedZoneId: !GetAtt ALB.Outputs.HostedZoneId
+              HostedZoneId: ZOL6BQ97QPGLM
+              WebUrl: momentosdivinos.mx
+
 #   WebsiteService:
 #       Type: AWS::CloudFormation::Stack
 #       Properties:

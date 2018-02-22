@@ -71,4 +71,8 @@ Outputs:
         Description: A reference to a port 80 listener
         Value: !Ref LoadBalancerListener  
 
+    HostedZoneId:
+        Description: A reference to the hosted zone
+        Value: !GetAtt LoadBalancer.CanonicalHostedZoneID
+
     
