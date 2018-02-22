@@ -57,7 +57,9 @@ automatizar el backup
 
 
 
-docker run -it --rm --volumes-from ecs-website-service-22-wordpress-d2fbf6a5c7fbcef12600 --network container:ecs-website-service-22-wordpress-d2fbf6a5c7fbcef12600 wordpress:cli db import backup.sql
+docker run -it --rm --volumes-from ecs-website-service-31-wordpress-9c8defb7c2f4f5a5f701 --network container:ecs-website-service-31-wordpress-9c8defb7c2f4f5a5f701 wordpress:cli db import backup.sql
+docker run -it --rm --volumes-from ecs-website-service-31-wordpress-9c8defb7c2f4f5a5f701 --network container:ecs-website-service-31-wordpress-9c8defb7c2f4f5a5f701 wordpress:cli wp option update home 'https://momentosdivinos.mx'
+docker run -it --rm --volumes-from ecs-website-service-31-wordpress-9c8defb7c2f4f5a5f701 --network container:ecs-website-service-31-wordpress-9c8defb7c2f4f5a5f701 wordpress:cli wp option update siteurl 'https://momentosdivinos.mx'
 
 
 
