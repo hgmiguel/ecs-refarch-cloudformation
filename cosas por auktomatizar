@@ -1,0 +1,65 @@
+yum install php71 php71-mysqlnd php71-fpm nginx mysql57-server mysql57 wget
+cp -r /config/html /var/www/
+cp /config/site.conf /etc/nginx/conf.d/
+
+service php-fpm start
+chown -R apache:apache /var/www/html
+
+service mysqld start
+
+change wp-config.php
+
+ create database wordpress;
+CREATE USER 'woocommerce'@'localhost' IDENTIFIED BY 'woocommerce';
+GRANT ALL ON wordpress.* TO 'woocommerce'@'localhost';
+FLUSH PRIVILEGES;
+
+
+curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+chmod +x wp-cli.phar
+mv wp-cli.phar /usr/local/bin/wp
+
+
+$ wp db import backup.sql
+
+
+cd /usr/local/bin
+wget https://dl.eff.org/certbot-auto
+./certbot-auto --nginx
+./certbot-auto --nginx --debug
+
+
+
+site.conf
+server {
+    index index.php index.html;
+    server_name momentosdivinos.*;
+    error_log  /var/log/nginx/bautizos_error.log warn;
+    access_log /var/log/nginx/bautizos_access.log combined;
+    root /var/www/html;
+
+    gzip on;
+    gzip_vary on;
+    gzip_min_length 1024;
+    gzip_proxied expired no-cache no-store private auth;
+    gzip_types text/plain text/css text/xml text/javascript application/x-javascript application/xml;
+    gzip_disable "MSIE [1-6]\.";
+
+    location /nginx_status {
+      stub_status on;
+      access_log   off;
+    }
+
+    location ~ \.php$ {
+        try_files $uri =404;
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass unix:/var/run/php-fpm/www.sock;
+        fastcgi_index index.php;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+    }
+}
+
+
+
